@@ -10,7 +10,6 @@ def dns_req_msg_parse(dns_msg: bytes) -> DNSRecord:
 
 def create_dns_resp_msg():
     response = DNSRecord()
-    pass
 
 def pack_dns_res_msg():
     pass

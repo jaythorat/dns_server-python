@@ -20,10 +20,12 @@ while True:
 	print("Echoing data back to " + str(client_address))
 	
 	parsed_msg = dns_req_msg_parse(payload)
+	print(parsed_msg.q.qname)
 	request_id = parsed_msg.header.id
-	print(request_id)
-	d1 = DNSRecord(DNSHeader(qr=1,aa=0,ra=1),q=DNSQuestion("jaythorat.in"),a=RR("jaythorat.in",rdata=A("1.23.34.99"),))
+
+
+	# print(request_id)
+	d1 = DNSRecord(DNSHeader(qr=1,aa=0,ra=1),q=DNSQuestion(str(parsed_msg.q.qname)),a=RR(str(parsed_msg.q.qname),rdata=A("99.23.34.99"),))
 	d1.header.id=request_id
 	response = d1.pack()
-	print(type(response))
 	sock.sendto(response, (client_address[0],client_address[1]))

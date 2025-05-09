@@ -1,31 +1,50 @@
 import socket
-import dnslib as jay
-from dnslib.dns import DNSRecord,DNSHeader,DNSQuestion,RR,CNAME,A
-from utils import dns_req_msg_parse
+from utils import DNSMessageHandler
+from config import Config
 
 
 
+class DNSServer:
+    def __init__(self):
+        self.config = Config()
+        self.host = self.config.getHost()
+        self.port = self.config.getPort()
+        self.bufferSize = self.config.getBufferSize()
+        self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    def start(self): 
+        server = (self.host, self.port)
+        self.sock.bind(server)
+        print("Listening on " + self.host + ":" + str(self.port))
 
-server_address = 'localhost'
-server_port = 53
+    def stop(self):
+        self.sock.close()
+        print("Server stopped.")
 
-server = (server_address, server_port)
-sock.bind(server)
-print("Listening on " + server_address + ":" + str(server_port))
+    def getRequest(self):
+        try:
+            data, addr = self.sock.recvfrom(self.bufferSize)
+            print("Received data from " + str(addr))
+            return data, addr
+        except socket.error as e:
+            print("Socket error: " + str(e))
+            return None, None
+        
+    def sendResponse(self, data, addr):
+        try:
+            self.sock.sendto(data, addr)
+            print("Sent response to " + str(addr))
+        except socket.error as e:
+            print("Socket error: " + str(e))
+
+server = DNSServer()
+server.start()
+
 
 while True:
-	payload, client_address = sock.recvfrom(512)
-	print("Echoing data back to " + str(client_address))
-	
-	parsed_msg = dns_req_msg_parse(payload)
-	print(parsed_msg.q.qname)
-	request_id = parsed_msg.header.id
-
-
-	# print(request_id)
-	d1 = DNSRecord(DNSHeader(qr=1,aa=0,ra=1),q=DNSQuestion(str(parsed_msg.q.qname)),a=RR(str(parsed_msg.q.qname),rdata=A("99.23.34.99"),))
-	d1.header.id=request_id
-	response = d1.pack()
-	sock.sendto(response, (client_address[0],client_address[1]))
+    data,addr = server.getRequest()
+    msgHandler = DNSMessageHandler(data)
+    msgHandler.dnsReqMsgParse().createDNSRespMsg("11.11.11.11").packDNSRespMsg()
+    response = msgHandler.getPackedResponse()
+    server.sendResponse(response, addr)
+ 

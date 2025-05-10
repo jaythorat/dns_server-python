@@ -1,5 +1,6 @@
 import socket
 from utils import DNSMessageHandler
+from fetchDNSRecords import FetchDNSRecords
 from config import Config
 
 
@@ -41,10 +42,22 @@ server = DNSServer()
 server.start()
 
 
+
 while True:
+
+
     data,addr = server.getRequest()
-    msgHandler = DNSMessageHandler(data)
-    msgHandler.dnsReqMsgParse().createDNSRespMsg("11.11.11.11").packDNSRespMsg()
-    response = msgHandler.getPackedResponse()
+    msgHandler = DNSMessageHandler(data).dnsReqMsgParse()
+    queryDomain = msgHandler.getQueryDomain()
+    queryType = msgHandler.getQueryType()
+    if not msgHandler.isQueryTypeValid():
+        pass
+    value = FetchDNSRecords(queryDomain).fetchRecords()
+    if value is None:
+        msgHandler.createNXDomainRespMsg()
+
+    else :
+        msgHandler.createDNSRespMsg(value)
+    response = msgHandler.packDNSRespMsg().getPackedResponse()
     server.sendResponse(response, addr)
  

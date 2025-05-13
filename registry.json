@@ -1,6 +1,13 @@
 {
-    "domain.jay":"1.0.0.0",
-    "domain2.jay":"12.12.12.12",
-    "domain3.jay":"14.14.14.14",
-    "domain4.jay":"192.168.1.1"
+    "domain.jay":{
+        "A":["domain.jay","1.1.1.1",0,"N/A"],
+        "CNAME":["sub.domain.jay","portfolio.jaythorat.in",0,"N/A"]
+    },
+    "domain.jay2":{
+        "A":["domain.jay2","2.2.2.2",0,"N/A"]
+    },
+    "domain.jay3":{
+        "A":["domain.jay3","3.3.3.3",0,"N/A"]
+    }
+    
 }

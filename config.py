@@ -3,6 +3,7 @@ class Config:
         self.host = "localhost"
         self.port = 53
         self.bufferSize = 512
+        self.supporterdRRTypes = ["A","CNAME"]
 
     def getHost(self):
         return self.host
@@ -12,3 +13,7 @@ class Config:
     
     def getBufferSize(self):
         return self.bufferSize
+    
+    def getSupportedRRTypes(self):
+        return self.supporterdRRTypes
+    

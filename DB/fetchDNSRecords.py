@@ -9,7 +9,6 @@ class FetchDNSRecords:
         if self.domain.endswith('.'):
             self.domain = self.domain[:-1]
 
-
     def fetchRecords(self):
         with open('registry.json', 'r') as file:
             data = json.load(file)

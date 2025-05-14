@@ -18,8 +18,8 @@ class UpstreamResolver:
             response_data, _ = self.sock.recvfrom(512)
             return response_data
         except socket.timeout:
-            print("Timeout occurred while waiting for upstream DNS response.")
-            return bytes()
+            print("Upstream DNS query timed out.")
+            return None
         except Exception as e:
-            print(f"An error occurred while sending query to upstream DNS: {e}")
-            return bytes()
+            print(f"Error occured Upstream Server : {e}")
+            return None

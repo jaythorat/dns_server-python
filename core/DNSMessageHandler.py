@@ -3,7 +3,6 @@ from dnslib.dns import DNSRecord,DNSHeader,DNSQuestion,RR,CNAME,A,RCODE,QTYPE
 from DB.fetchDNSRecords import FetchDNSRecords
 from config.config import Config
 from core.upstreamResolver import UpstreamResolver
-import re
 from suport.domainParser import DomainParser
 
 upstreamResolver = UpstreamResolver()
@@ -89,20 +88,25 @@ class DNSMessageHandler:
         # if req for A -- return a if present or else return c else nxdomain
         # if req for CNAME -- return c if present or else return nxdomi 
         # if req for NS -- return ns if present or else return nxdomain
-        pass      
+        pass  
+
+    def getRespUpstream(self):   
+        upstreamResp = self.upstreamResolver.sendQuery(self.dnsMsg)
+        if not upstreamResp:
+            self.serverFailure()
+            return None
+        self.packedDNSResp = upstreamResp
+        self.dnsResp = True  #TODO: Temp bypass fix later
+        return True
 
     def createDNSRespMsg(self):
         print("For :",self.getQueryDomain())
-        if not self.isAuthoritative():
-            self.packedDNSResp = self.upstreamResolver.sendQuery(self.dnsMsg)
-            self.dnsResp = True  #TODO: Temp bypass fix later
-            return 
-        
+        if not self.isAuthoritative() and not self.getRespUpstream():
+                return None
         
         if self.getQueryTypeName() not in self.config.getSupportedRRTypes():         
             self.notImplemented()
             return
-        
 
         value = self.fetchDomainDNSRecords()
         if not value:
@@ -114,8 +118,6 @@ class DNSMessageHandler:
             self.nxDomain()
             return
         value = value.get(dp)
-        
-        print("Value: ", value)
         if self.getQueryTypeName() == "A":
             if value[0] == "A":
                 self.RR_A(value)

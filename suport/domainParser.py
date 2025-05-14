@@ -3,21 +3,6 @@ import re
 class DomainParser():
     def __init__(self, domain):
         self.domain = domain
-        # self.subdomain = None
-        # self.sld = None
-        # self.tld = None
-        # self.parse_domain()
-
-    # def parse_domain(self):
-    #     parts = self.domain.split('.')
-    #     if len(parts) < 2:
-    #         raise ValueError("Invalid domain format")
-    #     self.tld = parts[-1]
-    #     self.sld = parts[-2]
-    #     if len(parts) > 2:
-    #         self.subdomain = '.'.join(parts[:-2])
-    #     else:
-    #         self.subdomain = None
 
     def isFQDN(self):
         """

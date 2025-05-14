@@ -1,13 +1,13 @@
 {
-    "jay.gamer":{
-        "A":["jay.gamer","1.1.1.1",0,"N/A"],
-        "CNAME":["sub.domain.gamer","portfolio.jaythorat.in",0,"N/A"]
+    "jay.ks":{
+        "A":["jay.ks","20.207.73.82",0,"N/A"],
+        "CNAME":["sub.domain.ks","portfolio.jaythorat.in",0,"N/A"] 
     },
-    "ramesh.gamer":{
-        "A":["ramesh.gamer","2.2.2.2",0,"N/A"]
+    "ramesh.ks":{
+        "A":["ramesh.ks","2.2.2.2",0,"N/A"]
     },
-    "suresh.gamer":{
-        "A":["suresh.gamer","3.3.3.3",0,"N/A"]
+    "suresh.ks":{
+        "A":["suresh.ks","3.3.3.3",0,"N/A"]
     }
     
 }

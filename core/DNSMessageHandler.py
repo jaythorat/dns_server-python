@@ -11,7 +11,7 @@ upstreamResolver = UpstreamResolver()
 class DNSMessageHandler:
     def __init__(self,dnsMsg):
         self.config = Config()
-        self.upstreamResolver = upstreamResolver
+        self.upstreamResolver = UpstreamResolver()
         self.dnsMsg = dnsMsg
         self.parsedMsg = self.dnsReqMsgParse()
         self.dnsResp = None

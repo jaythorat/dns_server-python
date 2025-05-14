@@ -1,5 +1,5 @@
 import socket
-from config import Config
+from config.config import Config
 
 class DNSServer:
     def __init__(self):

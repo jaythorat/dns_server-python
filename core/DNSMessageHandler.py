@@ -1,12 +1,14 @@
 from dnslib import *
 from dnslib.dns import DNSRecord,DNSHeader,DNSQuestion,RR,CNAME,A,RCODE,QTYPE
 from DB.fetchDNSRecords import FetchDNSRecords
-from config import Config
+from config.config import Config
+from core.upstreamResolver import UpstreamResolver
 
 
 class DNSMessageHandler:
     def __init__(self,dnsMsg):
         self.config = Config()
+        self.upstreamResolver = UpstreamResolver()
         self.dnsMsg = dnsMsg
         self.parsedMsg = self.dnsReqMsgParse()
         self.dnsResp = None
@@ -27,6 +29,13 @@ class DNSMessageHandler:
     
     def isQueryTypeValid(self):
         if str(self.parsedMsg.q.qtype) in self.DNSRecordTypes:
+            return True
+        else:
+            return False
+    
+    def isAuthoritative(self):
+        domain = self.getQueryDomain()
+        if domain.endswith("." + self.config.getAuthTLD()) or domain.endswith("." + self.config.getAuthTLD() + "."):
             return True
         else:
             return False
@@ -72,6 +81,11 @@ class DNSMessageHandler:
         self.dnsResp = self.createResponseDNSRecord(RCODE.NOERROR,CNAME(value[1]),0)
 
     def createDNSRespMsg(self):
+        if not self.isAuthoritative():
+            self.packedDNSResp = self.upstreamResolver.sendQuery(self.dnsMsg)
+            self.dnsResp = True  #TODO: Temp bypass fix later
+            return 
+
         if self.getQueryTypeName() not in self.config.getSupportedRRTypes():         
             self.notImplemented()
             return
@@ -90,5 +104,6 @@ class DNSMessageHandler:
     def getDNSRespMsg(self):
         if self.dnsResp is None:
             self.serverFailure()
-        self.packedDNSResp = self.dnsResp.pack()
+        elif hasattr(self.dnsResp, "pack"):
+            self.packedDNSResp = self.dnsResp.pack()
         return self.packedDNSResp

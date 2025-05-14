@@ -4,6 +4,9 @@ class Config:
         self.port = 53
         self.bufferSize = 512
         self.supporterdRRTypes = ["A","CNAME"]
+        self.googleDNShost = "8.8.8.8"
+        self.gooogleDNSport = 53
+        self.authTLD = "gamer"
 
     def getHost(self):
         return self.host
@@ -16,4 +19,13 @@ class Config:
     
     def getSupportedRRTypes(self):
         return self.supporterdRRTypes
+    
+    def getGoogleDNShost(self):
+        return self.googleDNShost
+    
+    def getGoogleDNSport(self):
+        return self.gooogleDNSport
+    
+    def getAuthTLD(self):
+        return self.authTLD
     

@@ -1,0 +1,6 @@
+{
+    "test.ks":{
+        "test.ks":["A","20.207.73.82",0,"Sample A Record pointing to github.com"],
+        "sub.test.ks":["CNAME","test.ks",0,"Sample CNAME Record"]
+    }
+}

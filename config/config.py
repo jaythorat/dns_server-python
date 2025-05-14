@@ -1,6 +1,6 @@
 class Config:
     def __init__(self):
-        self.host = "localhost"
+        self.host = "0.0.0.0"
         self.port = 53
         self.bufferSize = 512
         self.supporterdRRTypes = ["A","CNAME"]

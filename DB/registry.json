@@ -1,7 +1,7 @@
 {
     "jay.ks":{
         "jay.ks":["A","20.207.73.82",0,"N/A"],
-        "sub.jay.ks":["CNAME","facebook.com",0,"N/A"] 
+        "sub.jay.ks":["CNAME","jay.ks",0,"N/A"] 
     },
     "ramesh.ks":{
         "ramesh.ks":["A","2.2.2.2",0,"N/A"]

@@ -1,5 +1,6 @@
 class Config:
     def __init__(self):
+        self.maxWorkers = 10
         self.host = "0.0.0.0"
         self.port = 53
         self.bufferSize = 512
@@ -9,6 +10,10 @@ class Config:
         self.googleUpstreamTimeout = 10
         self.authTLD = "ks"
 
+
+    def getMaxWorkers(self):
+        return self.maxWorkers
+    
     def getHost(self):
         return self.host
     

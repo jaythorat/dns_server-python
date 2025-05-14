@@ -21,7 +21,6 @@ class DNSServer:
     def getRequest(self):
         try:
             data, addr = self.sock.recvfrom(self.bufferSize)
-            print("Received data from " + str(addr))
             return data, addr
         except socket.error as e:
             print("Socket error: " + str(e))
@@ -30,6 +29,5 @@ class DNSServer:
     def sendResponse(self, data, addr):
         try:
             self.sock.sendto(data, addr)
-            print("Sent response to " + str(addr))
         except socket.error as e:
             print("Socket error: " + str(e))

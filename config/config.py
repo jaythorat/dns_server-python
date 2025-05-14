@@ -4,9 +4,9 @@ class Config:
         self.port = 53
         self.bufferSize = 512
         self.supporterdRRTypes = ["A","CNAME"]
-        self.googleDNShost = "8.8.8.8"
+        self.googleDNShost = "1.1.1.1"
         self.gooogleDNSport = 53
-        self.googleUpstreamTimeout = 15
+        self.googleUpstreamTimeout = 10
         self.authTLD = "ks"
 
     def getHost(self):

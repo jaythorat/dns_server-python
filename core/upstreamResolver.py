@@ -10,7 +10,7 @@ class UpstreamResolver:
         self.upstreamDNS = (self.upstreamHost, self.upstreamPort)
         self.bufferSize = self.config.getBufferSize()
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.sock.settimeout(5)
+        self.sock.settimeout(self.config.getGoogleUpstreamTimeout())
 
     def sendQuery(self, data):
         self.sock.sendto(data, self.upstreamDNS)

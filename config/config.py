@@ -6,6 +6,7 @@ class Config:
         self.supporterdRRTypes = ["A","CNAME"]
         self.googleDNShost = "8.8.8.8"
         self.gooogleDNSport = 53
+        self.googleUpstreamTimeout = 15
         self.authTLD = "ks"
 
     def getHost(self):
@@ -28,4 +29,7 @@ class Config:
     
     def getAuthTLD(self):
         return self.authTLD
+    
+    def getGoogleUpstreamTimeout(self):
+        return self.googleUpstreamTimeout
     

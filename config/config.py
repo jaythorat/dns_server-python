@@ -6,7 +6,7 @@ class Config:
         self.supporterdRRTypes = ["A","CNAME"]
         self.googleDNShost = "8.8.8.8"
         self.gooogleDNSport = 53
-        self.authTLD = "gamer"
+        self.authTLD = "ks"
 
     def getHost(self):
         return self.host

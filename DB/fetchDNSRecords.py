@@ -13,9 +13,7 @@ class FetchDNSRecords:
         with open('registry.json', 'r') as file:
             data = json.load(file)
             if self.domain in data:
-                print(f"Records found for domain: {self.domain}")
                 return data[self.domain]
             else:
-                print(f"No records found for domain: {self.domain}")
                 return None
         return None

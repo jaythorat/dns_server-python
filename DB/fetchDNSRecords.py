@@ -1,5 +1,9 @@
 import json
 
+from DB.sql import MysqlConnectionPool
+
+connectionPool = MysqlConnectionPool()
+
 class FetchDNSRecords:
     def __init__(self, domain):
         self.domain = domain
@@ -10,10 +14,15 @@ class FetchDNSRecords:
             self.domain = self.domain[:-1]
 
     def fetchRecords(self):
-        with open('DB/registry.json', 'r') as file:
-            data = json.load(file)
-            if self.domain in data:
-                return data[self.domain]
-            else:
-                return None
-        return None
+        data,status = connectionPool.getData("getDataById",["DNSRecordView","domainName",self.domain])
+        if status != "SUCCESS":
+            return None
+        return data 
+    
+    @classmethod
+    def fetchParticularRecord(self,cleanedDomain):
+        data= connectionPool.getData("getDataById",["DNSRecordView","recordName",cleanedDomain])
+        if data["status"]!= "SUCCESS":
+            return None
+        return data["data"]
+    

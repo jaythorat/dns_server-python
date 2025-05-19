@@ -25,15 +25,15 @@ class DNSMessageHandler:
         return FetchDNSRecords(domain).fetchRecords()
     
     def __handleARecord__(self,dnsRecord):
-        if dnsRecord[0] == "A":
+        if dnsRecord["recordType"] == "A":
             self.respBuilder.RR_A(dnsRecord)
-        elif dnsRecord[0] == "CNAME":
+        elif dnsRecord["recordType"] == "CNAME":
             self.respBuilder.RR_CNAME(dnsRecord)
         else:
             self.respBuilder.emptyResponse()
 
     def __handleCNAMERecord__(self,dnsRecord):
-        if dnsRecord[0] == "CNAME":
+        if dnsRecord["recordType"] == "CNAME":
             self.respBuilder.RR_CNAME(dnsRecord)
         else:
             self.respBuilder.emptyResponse()
@@ -49,20 +49,16 @@ class DNSMessageHandler:
         if not self.__isSupportedRRType__():         
             self.respBuilder.notImplemented()
             return
-        dnsRecords = self.fetchDomainDNSRecords()
-        if not dnsRecords:
-            self.respBuilder.emptyResponse()
-            return
         cleanedDomain = self.domainParser.handleFQDN()
-        particularDNSRecord = dnsRecords.get(cleanedDomain)
-        if not particularDNSRecord:
+        particularDNSRecord = FetchDNSRecords.fetchParticularRecord(cleanedDomain)
+        if not particularDNSRecord or not particularDNSRecord[0]:
             self.respBuilder.emptyResponse()
             return
         if self.dnsParser.getQueryTypeName() == "A":
-            self.__handleARecord__(particularDNSRecord)
+            self.__handleARecord__(particularDNSRecord[0])
             return
         elif self.dnsParser.getQueryTypeName() == "CNAME":
-            self.__handleCNAMERecord__(particularDNSRecord)
+            self.__handleCNAMERecord__(particularDNSRecord[0])
             return
         
     def getResponse(self): 

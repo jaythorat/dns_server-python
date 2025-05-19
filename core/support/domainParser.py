@@ -2,6 +2,7 @@ import re
 
 class DomainParser():
     def __init__(self, domain):
+
         self.domain = domain
 
     def isFQDN(self):
@@ -13,7 +14,8 @@ class DomainParser():
         return self.domain
     
     def extractDomain(self):
-        match = re.search(r'([a-zA-Z0-9-]+\.[a-zA-Z]{2,})$', self.handleFQDN())
-        if match:
-            return match.group(1)
-        return None
+        fqdn = self.handleFQDN()
+        parts = fqdn.split('.')
+        if len(parts) >= 3:
+            return '.'.join(parts[-3:])
+        return fqdn

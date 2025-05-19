@@ -41,16 +41,16 @@ class DNSResponseBuilder:
         self.dnsResp = self.createResponseDNSRecord(RCODE.NOERROR,None,0)
     
     def RR_A(self,value):
-        if not value or not isinstance(value, list):
+        if not value or not isinstance(value, dict):
             self.emptyResponse()
             return
-        self.dnsResp = self.createResponseDNSRecord(RCODE.NOERROR,A(value[1]),0,QTYPE.A)
+        self.dnsResp = self.createResponseDNSRecord(RCODE.NOERROR,A(value["recordValue"]),0,QTYPE.A)
     
     def RR_CNAME(self,value):
-        if not value or not isinstance(value, list):
+        if not value or not isinstance(value, dict):
             self.emptyResponse()
             return
-        self.dnsResp = self.createResponseDNSRecord(RCODE.NOERROR,CNAME(value[1]),0,QTYPE.CNAME)
+        self.dnsResp = self.createResponseDNSRecord(RCODE.NOERROR,CNAME(value["recordValue"]),0,QTYPE.CNAME)
 
     def upstreamResp(self):
         upstreamResp = self.upstreamResolver.sendQuery(self.dnsMsg)

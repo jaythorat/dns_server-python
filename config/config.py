@@ -8,7 +8,13 @@ class Config:
         self.googleDNShost = "1.1.1.1"
         self.gooogleDNSport = 53
         self.googleUpstreamTimeout = 10
-        self.authTLD = "ks"
+        self.authTLD = "websculptors.in"
+        self.sqlHost = "localhost"
+        self.sqlPort = "3306"
+        self.sqlUser = "root"
+        self.sqlPassword = "Qwerty@123"
+        self.sqlDatabase = "DomainManager"
+        self.connectionPoolSize = 5
 
 
     def getMaxWorkers(self):
@@ -38,3 +44,15 @@ class Config:
     def getGoogleUpstreamTimeout(self):
         return self.googleUpstreamTimeout
     
+    def getSqlHost(self):
+        return self.sqlHost
+    def getSqlPort(self):
+        return self.sqlPort
+    def getSqlUser(self):
+        return self.sqlUser
+    def getSqlPassword(self):
+        return self.sqlPassword
+    def getSqlDatabase(self):
+        return self.sqlDatabase
+    def getConnectionPoolSize(self):
+        return self.connectionPoolSize

@@ -51,6 +51,7 @@ class DNSMessageHandler:
             return
         cleanedDomain = self.domainParser.handleFQDN()
         particularDNSRecord = FetchDNSRecords.fetchParticularRecord(cleanedDomain)
+        print(particularDNSRecord)
         if not particularDNSRecord or not particularDNSRecord[0]:
             self.respBuilder.emptyResponse()
             return

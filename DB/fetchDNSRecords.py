@@ -21,7 +21,7 @@ class FetchDNSRecords:
     
     @classmethod
     def fetchParticularRecord(self,cleanedDomain):
-        data= connectionPool.getData("getDataById",["DNSRecordView","recordName",cleanedDomain])
+        data= connectionPool.getData("getDataById",["dnsrecordview","recordName",cleanedDomain])
         if data["status"]!= "SUCCESS":
             return None
         return data["data"]

@@ -14,7 +14,8 @@ class DNSMessageHandler:
         self.dnsMsg = dnsMsg   
     
     def isAuthoritative(self):
-        domain = self.dnsParser.getQueryDomain()
+        domain = self.dnsParser.getQueryDomain().lower()
+
         if domain.endswith(self.config.getAuthTLD() + ".") or domain.endswith("." + self.config.getAuthTLD() + "."):
             return True
         else:

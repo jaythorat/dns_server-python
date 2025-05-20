@@ -56,7 +56,7 @@ class DNSMessageHandler:
             self.respBuilder.RR_SOA()
             return
         
-        if self.dnsParser.getQueryTypeName() == "NS" and cleanedDomain == "websculptors.in":
+        if self.dnsParser.getQueryTypeName() == "NS" and cleanedDomain.lower() == "websculptors.in":
             self.respBuilder.RR_NS()
             return
 

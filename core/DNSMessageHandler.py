@@ -45,7 +45,7 @@ class DNSMessageHandler:
         return True
 
     def handleQuery(self):
-        cleanedDomain = self.domainParser.handleFQDN()
+        cleanedDomain = self.domainParser.handleFQDN().lower()
         
         if not self.isAuthoritative() and not self.respBuilder.upstreamResp():
             print("Not Authoritative and Upstream DNS not responding",cleanedDomain)

@@ -9,7 +9,7 @@ class Config:
         self.gooogleDNSport = 53
         self.googleUpstreamTimeout = 10
         self.authTLD = "websculptors.in"
-        self.sqlHost = "localhost"
+        self.sqlHost = "65.1.71.40"
         self.sqlPort = "3306"
         self.sqlUser = "root"
         self.sqlPassword = "Qwerty@123"

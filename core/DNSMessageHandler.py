@@ -15,7 +15,7 @@ class DNSMessageHandler:
     
     def isAuthoritative(self):
         domain = self.dnsParser.getQueryDomain()
-        if domain.endswith("." + self.config.getAuthTLD()) or domain.endswith("." + self.config.getAuthTLD() + "."):
+        if domain.endswith(self.config.getAuthTLD() + ".") or domain.endswith("." + self.config.getAuthTLD() + "."):
             return True
         else:
             return False
@@ -44,12 +44,24 @@ class DNSMessageHandler:
         return True
 
     def handleQuery(self):
+        print(self.dnsParser.getQueryTypeName())
         if not self.isAuthoritative() and not self.respBuilder.upstreamResp():
+            print("Not Authoritative and Upstream DNS not responding")
             return None
+        
+        cleanedDomain = self.domainParser.handleFQDN()
+        if self.dnsParser.getQueryTypeName() == "SOA":
+            self.respBuilder.RR_SOA()
+            return
+        
+        if self.dnsParser.getQueryTypeName() == "NS" and cleanedDomain == "websculptors.in":
+            self.respBuilder.RR_NS()
+            return
+
         if not self.__isSupportedRRType__():         
             self.respBuilder.notImplemented()
             return
-        cleanedDomain = self.domainParser.handleFQDN()
+        
         particularDNSRecord = FetchDNSRecords.fetchParticularRecord(cleanedDomain)
         if not particularDNSRecord or not particularDNSRecord[0]:
             self.respBuilder.emptyResponse()

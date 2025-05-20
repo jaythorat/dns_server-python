@@ -16,4 +16,5 @@ def handleRequest(data, addr, server):
 with ThreadPoolExecutor(max_workers=Config().getMaxWorkers()) as executor:
     while True:
         data, addr = server.getRequest()
+        print(f"Received request from {addr}")
         executor.submit(handleRequest, data, addr, server)

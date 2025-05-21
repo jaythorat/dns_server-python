@@ -14,14 +14,14 @@ class FetchDNSRecords:
             self.domain = self.domain[:-1]
 
     def fetchRecords(self):
-        data,status = connectionPool.getData("getDataById",["DNSRecordView","domainName",self.domain])
+        data,status = connectionPool.getData("getDataById",["dnsrecordview","domainName",self.domain])
         if status != "SUCCESS":
             return None
         return data 
     
     @classmethod
     def fetchParticularRecord(self,cleanedDomain):
-        data= connectionPool.getData("getDataById",["DNSRecordView","recordName",cleanedDomain])
+        data= connectionPool.getData("getDataById",["dnsrecordview","recordName",cleanedDomain])
         if data["status"]!= "SUCCESS":
             return None
         return data["data"]

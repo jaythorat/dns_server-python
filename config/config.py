@@ -4,7 +4,7 @@ class Config:
         self.host = "0.0.0.0"
         self.port = 53
         self.bufferSize = 512
-        self.supporterdRRTypes = ["A","CNAME"]
+        self.supporterdRRTypes = ["A","CNAME","CAA","NS","SOA"]
         self.googleDNShost = "1.1.1.1"
         self.gooogleDNSport = 53
         self.googleUpstreamTimeout = 10
@@ -15,6 +15,13 @@ class Config:
         self.sqlPassword = "Qwerty@123"
         self.sqlDatabase = "DomainManager"
         self.connectionPoolSize = 2
+        self.nsHosts = [
+            "ns3.websculptors.in.",
+            "ns4.websculptors.in."
+        ]
+        self.registrarEmail = "contact.websculptors.in"
+        self.registrarName = "Web Sculptors"
+
 
 
     def getMaxWorkers(self):
@@ -46,13 +53,27 @@ class Config:
     
     def getSqlHost(self):
         return self.sqlHost
+    
     def getSqlPort(self):
         return self.sqlPort
+    
     def getSqlUser(self):
         return self.sqlUser
+    
     def getSqlPassword(self):
         return self.sqlPassword
+    
     def getSqlDatabase(self):
         return self.sqlDatabase
+    
     def getConnectionPoolSize(self):
         return self.connectionPoolSize
+    
+    def getNSHosts(self):
+        return self.nsHosts
+    
+    def getRegistrarEmail(self):
+        return self.registrarEmail
+    
+    def getRegistrarName(self):
+        return self.registrarName

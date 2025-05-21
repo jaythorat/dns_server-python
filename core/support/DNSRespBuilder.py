@@ -2,9 +2,11 @@ from core.upstreamResolver import UpstreamResolver
 from core.support.DNSParser import DNSParser
 from dnslib.dns import DNSRecord,DNSHeader,DNSQuestion,RR,CNAME,A,RCODE,QTYPE,SOA,NS
 import time
+from config.config import Config
 
 class DNSResponseBuilder:
     def __init__(self, dnsMsg):
+        self.config = Config()
         self.dnsMsg = dnsMsg
         self.upstreamResolver = UpstreamResolver()
         self.parsedMsg = DNSParser(dnsMsg).dnsReqMsgParse()
@@ -54,8 +56,8 @@ class DNSResponseBuilder:
     
     def RR_SOA(self):
         soa_record = SOA(
-            mname="ns3.websculptors.in.",          # Primary NS
-            rname="jay.websculptors.in.",   # Email
+            mname=self.config.getNSHosts()[0],          # Primary NS
+            rname=self.config.getRegistrarEmail,   # Email
             times=(
                 int(time.strftime("%Y%m%d%H")),    # Serial
                 3600,      # Refresh
@@ -94,18 +96,12 @@ class DNSResponseBuilder:
         self.dnsResp = dnsRecord
 
     def RR_NS(self):
-    # List of your NS hostnames
-
-        ns_hosts = [
-            "ns3.websculptors.in.",
-            "ns4.websculptors.in."
-        ]
+        ns_hosts = self.config.getNSHosts()
         
         qname = str(self.parsedMsg.q.qname)
         qtype = self.parsedMsg.q.qtype
         qclass = self.parsedMsg.q.qclass
 
-        # DNS Flags
         aa = 1      # Authoritative answer
         ra = 0      # Recursion not available
         rcode = 0   # No error
@@ -115,8 +111,6 @@ class DNSResponseBuilder:
             qr=1, aa=aa, ra=ra, rcode=rcode
         )
         dnsQuestion = DNSQuestion(qname=qname, qtype=qtype, qclass=qclass)
-        
-        # Create RR for each NS
         ns_answers = [
             RR(
                 rname=qname,
@@ -143,6 +137,8 @@ class DNSResponseBuilder:
         self.dnsResp = dnsRecord
 
     def RR_CAA(self):
+        # REMOVE THIS IS EMPTY RESPONSE IN RETURN IS WORKING FINE 
+        # REMOVE IF LETSENCRYPT IS WORKING WITH NORMAL EMPTY RESP
         qname = str(self.parsedMsg.q.qname)
         qtype = self.parsedMsg.q.qtype
         qclass = self.parsedMsg.q.qclass

@@ -58,7 +58,7 @@ class DNSMessageHandler:
             return
         
         if self.dnsParser.getQueryTypeName() == "CAA":
-            self.respBuilder.RR_CAA()
+            self.respBuilder.emptyResponse()
             return
         
         if self.dnsParser.getQueryTypeName() == "NS" and cleanedDomain.lower() == "websculptors.in":

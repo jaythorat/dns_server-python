@@ -142,6 +142,30 @@ class DNSResponseBuilder:
         
         self.dnsResp = dnsRecord
 
+    def RR_CAA(self):
+        qname = str(self.parsedMsg.q.qname)
+        qtype = self.parsedMsg.q.qtype
+        qclass = self.parsedMsg.q.qclass
+
+        # DNS Flags
+        aa = 1      # Authoritative answer
+        ra = 0      # Recursion not available
+        rcode = 0   # No error
+
+        dnsHeader = DNSHeader(
+            id=self.parsedMsg.header.id,
+            qr=1, aa=aa, ra=ra, rcode=rcode
+        )
+        dnsQuestion = DNSQuestion(qname=qname, qtype=qtype, qclass=qclass)
+        
+        # No CAA record, so no answer RR
+        dnsRecord = DNSRecord(
+            dnsHeader,
+            q=dnsQuestion
+            # No 'a' argument (no answer section)
+        )
+        self.dnsResp = dnsRecord
+
 
     def upstreamResp(self):
         upstreamResp = self.upstreamResolver.sendQuery(self.dnsMsg)

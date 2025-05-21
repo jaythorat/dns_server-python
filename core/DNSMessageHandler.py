@@ -46,7 +46,7 @@ class DNSMessageHandler:
 
     def handleQuery(self):
         cleanedDomain = self.domainParser.handleFQDN().lower()
-        
+        print(self.dnsParser.getQueryTypeName())
         if not self.isAuthoritative() and not self.respBuilder.upstreamResp():
             print("Not Authoritative and Upstream DNS not responding",cleanedDomain)
             return None
@@ -57,9 +57,14 @@ class DNSMessageHandler:
             self.respBuilder.RR_SOA()
             return
         
+        if self.dnsParser.getQueryTypeName() == "CAA":
+            self.respBuilder.RR_CAA()
+            return
+        
         if self.dnsParser.getQueryTypeName() == "NS" and cleanedDomain.lower() == "websculptors.in":
             self.respBuilder.RR_NS()
             return
+        
 
         if not self.__isSupportedRRType__():         
             self.respBuilder.notImplemented()

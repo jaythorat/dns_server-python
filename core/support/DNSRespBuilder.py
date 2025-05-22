@@ -20,7 +20,7 @@ class DNSResponseBuilder:
         self.dnsResp = None
         self.packedDNSResp = None
 
-    def createResponseDNSRecord(self, rcode, answers=None, aa=1):
+    def createResponseDNSRecord(self, rcode, answers=None,authority = None, aa=1):
         """
         Create DNSRecord for response, with a list of answers (RR objects).
         aa = Authoritative Answer flag ; 1 for true, 0 for false
@@ -40,6 +40,9 @@ class DNSResponseBuilder:
         if answers:
             for ans in answers:
                 dnsRecord.add_answer(ans)
+        if authority:
+            for auth in authority:
+                dnsRecord.add_auth(auth)
         return dnsRecord
 
     def notImplemented(self):
@@ -113,10 +116,15 @@ class DNSResponseBuilder:
         # So at the end we will be their source of managing all records
         # So valid SOA will be our main  ws.in's  SOA
         # IF in future we allow user to set NS records, then we need to change this
-        qname = self.config.getAuthTLD() 
+        qname = str(self.parsedMsg.q.qname)
         qclass = self.parsedMsg.q.qclass
-        answer = RR(qname, QTYPE.SOA, qclass, 0, soa_record)
-        self.dnsResp = self.createResponseDNSRecord(RCODE.NOERROR, [answer])
+        if self.config.getAuthTLD() == qname[:-1]:
+            auths = RR(qname, QTYPE.SOA, qclass, 0, soa_record)
+            self.dnsResp = self.createResponseDNSRecord(RCODE.NOERROR, [auths])
+        else:
+            auths = RR(qname, QTYPE.SOA, qclass, 0, soa_record)
+            self.dnsResp = self.createResponseDNSRecord(RCODE.NOERROR,answers=None, authority=[auths])
+
 
     def RR_NS(self):
         """

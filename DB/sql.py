@@ -1,8 +1,6 @@
 from queue import Empty, Queue
 from threading import Lock
-
 import mysql.connector
-
 from config.config import Config
 
 

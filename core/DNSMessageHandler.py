@@ -11,72 +11,69 @@ class DNSMessageHandler:
         self.respBuilder = DNSResponseBuilder(dnsMsg)
         self.dnsParser = DNSParser(dnsMsg)
         self.domainParser = DomainParser(self.dnsParser.getQueryDomain())
-        self.dnsMsg = dnsMsg   
+        self.queryDomainName = self.domainParser.handleFQDN().lower()
+        self.qtype = self.dnsParser.getQueryTypeName()
+        self.extractedDomain = self.domainParser.extractDomain().lower()
+        self.dnsMsg = dnsMsg 
     
     def isAuthoritative(self):
-        domain = self.dnsParser.getQueryDomain().lower()
-
-        if domain.endswith(self.config.getAuthTLD() + ".") or domain.endswith("." + self.config.getAuthTLD() + "."):
+        if (self.queryDomainName.endswith(self.config.getAuthTLD()) or 
+            self.queryDomainName.endswith("." + self.config.getAuthTLD())):
             return True
         else:
             return False
 
     def fetchDomainDNSRecords(self):
-        domain = self.domainParser.extractDomain()
-        return FetchDNSRecords(domain).fetchRecords()
-    
-    def __handleARecord__(self,dnsRecord):
-        if dnsRecord["recordType"] == "A":
-            self.respBuilder.RR_A(dnsRecord)
-        elif dnsRecord["recordType"] == "CNAME":
-            self.respBuilder.RR_CNAME(dnsRecord)
-        else:
-            self.respBuilder.emptyResponse()
-
-    def __handleCNAMERecord__(self,dnsRecord):
-        if dnsRecord["recordType"] == "CNAME":
-            self.respBuilder.RR_CNAME(dnsRecord)
-        else:
-            self.respBuilder.emptyResponse()
+        return FetchDNSRecords(self.extractedDomain).fetchRecords()
 
     def __isSupportedRRType__(self):
         if self.dnsParser.getQueryTypeName() not in self.config.getSupportedRRTypes():
             return False
         return True
+    
+    def generateResponse(self):
+        print("Domain:", self.queryDomainName, "Query Type:", self.qtype)
+        if self.qtype == "NS":
+            self.respBuilder.RR_NS()
+            return True
+        elif self.qtype == "SOA":
+            self.respBuilder.RR_SOA()
+            return True
+        elif self.qtype == "CAA":
+            self.respBuilder.RR_CAA()
+            return True
+        
+        domainDetails = FetchDNSRecords.getDomainDetails(self.extractedDomain)
+        if not domainDetails or not domainDetails[0]:
+            
+            if self.extractedDomain in self.config.getRootLevelDomains():
+                domainDetails = [{"domainUUID":self.config.getRootLevelDomainUUID()}]
+            else:
+                self.respBuilder.nxDomain()
+                return False    
+            
+        allDNSRecords = FetchDNSRecords.fetchAllRecords(domainDetails[0]["domainUUID"])
+        if self.qtype == "A":
+            self.respBuilder.RR_A(allDNSRecords)
+        elif self.qtype == "CNAME":
+            self.respBuilder.RR_CNAME(allDNSRecords)
+        else:
+            return False
+        return True
+
 
     def handleQuery(self):
-        cleanedDomain = self.domainParser.handleFQDN().lower()
-        print("Domain:", cleanedDomain, "Query Type:", self.dnsParser.getQueryTypeName())
         if not self.isAuthoritative() and not self.respBuilder.upstreamResp():
-            print("Not Authoritative and Upstream DNS not responding",cleanedDomain)
+            # print("Not Authoritative and Upstream DNS not responding",self.queryDomainName)
             return None
         
-        if not self.__isSupportedRRType__():         
-            self.respBuilder.notImplemented()
+        if not self.__isSupportedRRType__():
+            self.respBuilder.notImplemented()      
             return
         
-        cleanedDomain = self.domainParser.handleFQDN()
-        if self.dnsParser.getQueryTypeName() == "SOA":
-            self.respBuilder.RR_SOA()
-            return
-        
-        if self.dnsParser.getQueryTypeName() == "CAA":
-            self.respBuilder.emptyResponse()
-            return
-        
-        if self.dnsParser.getQueryTypeName() == "NS" and cleanedDomain.lower() == "websculptors.in":
-            self.respBuilder.RR_NS()
-            return
-        
-        particularDNSRecord = FetchDNSRecords.fetchParticularRecord(cleanedDomain)
-        if not particularDNSRecord or not particularDNSRecord[0]:
-            self.respBuilder.emptyResponse()
-            return
-        if self.dnsParser.getQueryTypeName() == "A":
-            self.__handleARecord__(particularDNSRecord[0])
-            return
-        elif self.dnsParser.getQueryTypeName() == "CNAME":
-            self.__handleCNAMERecord__(particularDNSRecord[0])
+        if not self.generateResponse():
+            if not self.respBuilder.dnsResp:
+                self.respBuilder.notImplemented()  
             return
         
     def getResponse(self): 

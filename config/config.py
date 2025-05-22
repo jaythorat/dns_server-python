@@ -9,12 +9,23 @@ class Config:
         self.gooogleDNSport = 53
         self.googleUpstreamTimeout = 10
         self.authTLD = "websculptors.in"
+        self.rootLevelDomains = [
+            "websculptors.in",
+            "ns1.websculptors.in",
+            "ns2.websculptors.in",
+            "ns3.websculptors.in",
+            "ns4.websculptors.in",
+            "mx1.websculptors.in",
+            "mx2.websculptors.in",
+            "mail.websculptors.in",
+        ]
+        self.rootLevelDomainUUID = "4b946db8-34d7-11f0-bd70-edfd2de8055d"
         self.sqlHost = "65.1.71.40"
         self.sqlPort = "3306"
         self.sqlUser = "root"
         self.sqlPassword = "Qwerty@123"
         self.sqlDatabase = "DomainManager"
-        self.connectionPoolSize = 2
+        self.connectionPoolSize = 1
         self.nsHosts = [
             "ns3.websculptors.in.",
             "ns4.websculptors.in."
@@ -22,7 +33,11 @@ class Config:
         self.registrarEmail = "contact.websculptors.in"
         self.registrarName = "Web Sculptors"
 
-
+    def getRootLevelDomains(self):
+        return self.rootLevelDomains
+    
+    def getRootLevelDomainUUID(self):
+        return self.rootLevelDomainUUID
 
     def getMaxWorkers(self):
         return self.maxWorkers

@@ -14,7 +14,7 @@ class Config:
         self.sqlUser = "root"
         self.sqlPassword = "Qwerty@123"
         self.sqlDatabase = "DomainManager"
-        self.connectionPoolSize = 2
+        self.connectionPoolSize = 1
         self.nsHosts = [
             "ns3.websculptors.in.",
             "ns4.websculptors.in."

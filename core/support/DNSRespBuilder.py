@@ -1,11 +1,5 @@
 from core.upstreamResolver import UpstreamResolver
 from core.support.DNSParser import DNSParser
-from dnslib.dns import DNSRecord,DNSHeader,DNSQuestion,RR,CNAME,A,RCODE,QTYPE,SOA,NS
-import time
-from config.config import Config
-
-from core.upstreamResolver import UpstreamResolver
-from core.support.DNSParser import DNSParser
 from dnslib.dns import DNSRecord, DNSHeader, DNSQuestion, RR, CNAME, A, RCODE, QTYPE, SOA, NS
 import time
 from config.config import Config

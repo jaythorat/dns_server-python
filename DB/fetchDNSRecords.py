@@ -1,5 +1,3 @@
-import json
-
 from DB.sql import MysqlConnectionPool
 
 connectionPool = MysqlConnectionPool()

@@ -13,7 +13,7 @@ class DNSMessageHandler:
         self.domainParser = DomainParser(self.dnsParser.getQueryDomain())
         self.queryDomainName = self.domainParser.handleFQDN().lower()
         self.qtype = self.dnsParser.getQueryTypeName()
-        self.extractedDomain = self.domainParser.extractDomain()
+        self.extractedDomain = self.domainParser.extractDomain().lower()
         self.dnsMsg = dnsMsg 
     
     def isAuthoritative(self):
@@ -32,6 +32,7 @@ class DNSMessageHandler:
         return True
     
     def generateResponse(self):
+        print("Domain:", self.queryDomainName, "Query Type:", self.qtype)
         if self.qtype == "NS":
             self.respBuilder.RR_NS()
             return True
@@ -49,8 +50,7 @@ class DNSMessageHandler:
                 domainDetails = [{"domainUUID":self.config.getRootLevelDomainUUID()}]
             else:
                 self.respBuilder.nxDomain()
-                return False
-        
+                return False    
             
         allDNSRecords = FetchDNSRecords.fetchAllRecords(domainDetails[0]["domainUUID"])
         if self.qtype == "A":
@@ -63,9 +63,8 @@ class DNSMessageHandler:
 
 
     def handleQuery(self):
-        print("Domain:", self.queryDomainName, "Query Type:", self.qtype)
         if not self.isAuthoritative() and not self.respBuilder.upstreamResp():
-            print("Not Authoritative and Upstream DNS not responding",self.queryDomainName)
+            # print("Not Authoritative and Upstream DNS not responding",self.queryDomainName)
             return None
         
         if not self.__isSupportedRRType__():

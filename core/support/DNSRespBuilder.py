@@ -68,13 +68,12 @@ class DNSResponseBuilder:
             return
         answers = []
         qname = str(self.parsedMsg.q.qname)
-        print("QNAME:", qname[:-1])
         qclass = self.parsedMsg.q.qclass
         for record in records:
             ttl = record.get("ttl", 300)
-            if record["recordType"] == "A" and  qname[:-1] == record["recordName"] :
+            if record["recordType"] == "A" and  qname[:-1].lower() == record["recordName"].lower() :
                 answers.append(RR(qname, QTYPE.A, qclass, ttl, A(record["recordValue"])))
-            elif record["recordType"] == "CNAME" and qname[:-1] == record["recordName"]:
+            elif record["recordType"] == "CNAME" and qname[:-1].lower() == record["recordName"].lower():
                 answers.append(RR(qname, QTYPE.CNAME, qclass, ttl, CNAME(record["recordValue"])))
         if answers:
             self.dnsResp = self.createResponseDNSRecord(RCODE.NOERROR, answers)
@@ -92,7 +91,7 @@ class DNSResponseBuilder:
         qname = str(self.parsedMsg.q.qname)
         qclass = self.parsedMsg.q.qclass
         for record in records:
-            if record["recordType"] == "CNAME" and  qname[:-1] == record["recordName"]:
+            if record["recordType"] == "CNAME" and  qname[:-1].lower() == record["recordName"].lower():
                 ttl = record.get("ttl", 300)
                 answers.append(RR(qname, QTYPE.CNAME, qclass, ttl, CNAME(record["recordValue"])))
         if answers:

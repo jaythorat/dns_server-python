@@ -32,6 +32,16 @@ class DNSMessageHandler:
         return True
     
     def generateResponse(self):
+        if self.qtype == "NS":
+            self.respBuilder.RR_NS()
+            return True
+        elif self.qtype == "SOA":
+            self.respBuilder.RR_SOA()
+            return True
+        elif self.qtype == "CAA":
+            self.respBuilder.RR_CAA()
+            return True
+        
         domainDetails = FetchDNSRecords.getDomainDetails(self.extractedDomain)
         if not domainDetails or not domainDetails[0]:
             self.respBuilder.nxDomain()
@@ -41,12 +51,6 @@ class DNSMessageHandler:
             self.respBuilder.RR_A(allDNSRecords)
         elif self.qtype == "CNAME":
             self.respBuilder.RR_CNAME(allDNSRecords)
-        elif self.qtype == "NS":
-            self.respBuilder.RR_NS()
-        elif self.qtype == "SOA":
-            self.respBuilder.RR_SOA()
-        elif self.qtype == "CAA":
-            self.respBuilder.RR_CAA()
         else:
             return False
         return True

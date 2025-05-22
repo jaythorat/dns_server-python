@@ -44,7 +44,13 @@ class DNSMessageHandler:
         
         domainDetails = FetchDNSRecords.getDomainDetails(self.extractedDomain)
         if not domainDetails or not domainDetails[0]:
-            self.respBuilder.nxDomain()
+            
+            if self.extractedDomain in self.config.getRootLevelDomains():
+                domainDetails = [{"domainUUID":self.config.getRootLevelDomainUUID()}]
+            else:
+                self.respBuilder.nxDomain()
+                return False
+        
             
         allDNSRecords = FetchDNSRecords.fetchAllRecords(domainDetails[0]["domainUUID"])
         if self.qtype == "A":
@@ -62,12 +68,13 @@ class DNSMessageHandler:
             print("Not Authoritative and Upstream DNS not responding",self.queryDomainName)
             return None
         
-        if not self.__isSupportedRRType__():         
-            self.respBuilder.notImplemented()
+        if not self.__isSupportedRRType__():
+            self.respBuilder.notImplemented()      
             return
         
         if not self.generateResponse():
-            self.respBuilder.emptyResponse()
+            if not self.respBuilder.dnsResp:
+                self.respBuilder.notImplemented()  
             return
         
     def getResponse(self): 
